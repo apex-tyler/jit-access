@@ -29,7 +29,7 @@ WORKDIR /app
 COPY . ./
 
 # Build jitaccess-runner.jar
-RUN mvn package -DskipTests -Dquarkus.package.output-name=jitaccess
+RUN mvn package -DskipTests -Dmaven.resolver.transport=wagon -Dmaven.wagon.http.ssl.insecure=true -Dquarkus.package.output-name=jitaccess
 
 #
 # Package stage.

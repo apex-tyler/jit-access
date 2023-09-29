@@ -45,3 +45,11 @@ test.properties
 runConfigurations/
 .metals
 .vscode
+
+.idea
+.idea/*
+*.iml
+
+.idea
+.idea/*
+*.iml
