@@ -30,9 +30,25 @@ class Model {
         return `${message} (HTTP ${error.status}: ${error.statusText})`;
     }
 
+
     get policy() {
         console.assert(this._policy);
         return this._policy;
+    }
+
+    async activateGke() {
+        try {
+            return $.ajax({
+                type: "POST",
+                url: `/api/gkeActivate`,
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({}),
+                headers: this._getHeaders()
+            });
+        } catch (error) {
+            throw this._formatError(error);
+        }
     }
 
     async fetchPolicy() {

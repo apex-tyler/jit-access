@@ -41,11 +41,19 @@
         </div>
         <main class="mdl-layout__content app-pane" id="request-pane">
             <div class="mdl-grid center-items">
-                <button id="gcp-flow-button" class="flow-button mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored mdl-button--raised">GCP IAM</button>
-                <button id="gke-flow-button" class="flow-button mdl-button mdl-js-button mdl-js-ripple-effect mdl-button mdl-button--raised">Kubernetes (GKE)</button>
+                <form id="flow-option">
+                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="gcp-option">
+                        <input type="radio" id="gcp-option" class="mdl-radio__button" name="flow-options" value="gcp" checked>
+                        <span class="mdl-radio__label">GCP IAM</span>
+                    </label>
+                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="gke-option">
+                        <input type="radio" id="gke-option" class="mdl-radio__button" name="flow-options" value="gke">
+                        <span class="mdl-radio__label">GKE (Kubernetes)</span>
+                    </label>
+                </form>
             </div>
             <div id="gke-flow-pane" class="mdl-grid center-items flow-pane">
-                <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored mdl-button--raised">Request Access</button>
+                <button id="gke-request-access-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored mdl-button--raised">Request Access</button>
             </div>
             <div id="gcp-flow-pane" class="mdl-grid center-items flow-pane">
 
@@ -524,19 +532,6 @@
             }
         }
 
-        class FlowButton {
-            constructor(id) {
-                this.id = id;
-            }
-
-            select() {
-                $(".flow-button").removeClass("mdl-button--colored");
-                $(".flow-button").addClass("mdl-button");
-                $(`#${this.id}`).addClass("mdl-button--colored");
-                $(`#${this.id}`).removeClass("mdl-button");
-            }
-        }
-
         /** An SPA-style pane, only one of which is shown at a time */
         class AppPane {
             constructor(id) {
@@ -739,8 +734,6 @@
                 this.busyPane = new AppPane("busy-pane");
                 this.gkeFlowPane = new FlowPane("gke-flow-pane")
                 this.gcpFlowPane = new FlowPane("gcp-flow-pane");
-                this.gkeFlowButton = new FlowButton("gke-flow-button")
-                this.gcpFlowButton = new FlowButton("gcp-flow-button")
                 this.requestStatusPane = new RequestStatusPane();
             }
 
@@ -778,15 +771,19 @@
         $("#menu-home").click(() => window.location.replace(location.pathname));
         $("#menu-requestaccess").click(() => window.location.replace(location.pathname));
         $("#menu-help").click(() => gui.helpPane.show());
-        $("#gke-flow-button").click(() => {
-            gui.gkeFlowPane.show();
-            gui.gkeFlowButton.select();
-        });
-        $("#gcp-flow-button").click(() => {
-            gui.gcpFlowPane.show();
-            gui.gcpFlowButton.select();
-        })
         $("#gke-flow-pane").hide();
+        $("#flow-option").change(() => {
+           const selectedValue = $("input[name='flow-options']:checked").val();
+           if (selectedValue == 'gcp') {
+               gui.gcpFlowPane.show();
+           } else {
+               gui.gkeFlowPane.show();
+           }
+        });
+        $("#gke-request-access-button").click(() => {
+            backend.activateGke();
+        });
+
         $(document).ready(async () => {
             //
             // Configure steps.

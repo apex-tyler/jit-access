@@ -1,0 +1,30 @@
+#FROM google/cloud-sdk:449.0.0 AS gcloud
+
+#FROM ubuntu:latest
+#
+#COPY --from=gcloud /usr/bin/gcloud /usr/bin
+
+FROM bitnami/kubectl:1.20.9 as kubectl
+
+FROM ubuntu:focal
+
+RUN apt update -y
+
+RUN ln -fs /usr/share/zoneinfo/America/Chicago /etc/localtime
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y tzdata
+RUN dpkg-reconfigure --frontend noninteractive tzdata
+RUN apt install -y openjdk-17-jdk openjdk-17-jre
+
+# install gcloud
+RUN apt install -y apt-transport-https ca-certificates gnupg curl
+RUN echo "deb https://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+
+RUN apt update -y && apt install -y google-cloud-cli google-cloud-sdk-gke-gcloud-auth-plugin
+
+# install kubectl
+
+COPY --from=kubectl /opt/bitnami/kubectl/bin/kubectl /usr/local/bin/
+
+
+

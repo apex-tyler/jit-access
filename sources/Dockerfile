@@ -19,6 +19,8 @@
 # under the License.
 #
 
+
+
 #
 # Build stage.
 #
@@ -34,10 +36,11 @@ RUN mvn package -DskipTests -Dmaven.resolver.transport=wagon -Dmaven.wagon.http.
 #
 # Package stage.
 #
-FROM gcr.io/distroless/java17-debian12
+#FROM gcr.io/distroless/java17-debian12
+FROM jit-base:latest
 WORKDIR /app
 
 COPY --from=build /app/target/jitaccess-runner.jar .
 
 EXPOSE 8080
-CMD ["jitaccess-runner.jar"]
+CMD /usr/bin/java -jar /app/jitaccess-runner.jar

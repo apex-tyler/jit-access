@@ -26,9 +26,11 @@ import com.google.solutions.jitaccess.core.AccessDeniedException;
 import com.google.solutions.jitaccess.core.AccessException;
 import com.google.solutions.jitaccess.core.ApplicationVersion;
 import com.google.solutions.jitaccess.core.Exceptions;
+import com.google.solutions.jitaccess.core.adapters.KubernetesAdapter;
 import com.google.solutions.jitaccess.core.adapters.LogAdapter;
 import com.google.solutions.jitaccess.core.data.*;
 import com.google.solutions.jitaccess.core.services.ActivationTokenService;
+import com.google.solutions.jitaccess.core.services.GkeService;
 import com.google.solutions.jitaccess.core.services.NotificationService;
 import com.google.solutions.jitaccess.core.services.RoleActivationService;
 import com.google.solutions.jitaccess.core.services.RoleDiscoveryService;
@@ -40,6 +42,7 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.SecurityContext;
 import jakarta.ws.rs.core.UriInfo;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
@@ -72,6 +75,9 @@ public class ApiResource {
 
   @Inject
   RuntimeEnvironment runtimeEnvironment;
+
+  @Inject
+  GkeService gkeService;
 
   @Inject
   LogAdapter logAdapter;
@@ -261,6 +267,17 @@ public class ApiResource {
 
       throw new AccessDeniedException("Listing peers failed, see logs for details");
     }
+  }
+
+  @POST
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("gkeActivate")
+  public void gkeActivate() throws IOException, InterruptedException {
+    System.out.println("activate");
+    String result = gkeService.test();
+    System.out.println(result);
+
   }
 
   /**
