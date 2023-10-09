@@ -53,7 +53,42 @@
                 </form>
             </div>
             <div id="gke-flow-pane" class="mdl-grid center-items flow-pane">
-                <button id="gke-request-access-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored mdl-button--raised">Request Access</button>
+                <form action="#">
+                    <div>
+                        <fieldset id="gke-cluster">
+                            <legend>Cluster</legend>
+                            <input id="gke-cluster-text"
+                                   type="text"
+                                   autocomplete="off" autofocus />
+                        </fieldset>
+                        <fieldset id="gke-region">
+                            <legend>Region</legend>
+                            <input id="gke-region-text"
+                                   type="text"
+                                   autocomplete="off" />
+                        </fieldset>
+                        <fieldset id="gke-project">
+                            <legend>Project ID</legend>
+                            <input id="gke-project-text"
+                                   type="text"
+                                   autocomplete="off" />
+                        </fieldset>
+                        <fieldset id="gke-namespace">
+                            <legend>Namespace</legend>
+                            <input id="gke-namespace-text"
+                                   type="text"
+                                   autocomplete="off" />
+                        </fieldset>
+                        <fieldset id="gke-minutes">
+                            <legend>Minutes</legend>
+                            <input id="gke-minutes-text"
+                                   type="text"
+                                   autocomplete="off" />
+                        </fieldset>
+                    </div>
+                    <button id="gke-request-access-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored mdl-button--raised">Request Access</button>
+                </form>
+
             </div>
             <div id="gcp-flow-pane" class="mdl-grid center-items flow-pane">
 
@@ -781,7 +816,13 @@
            }
         });
         $("#gke-request-access-button").click(() => {
-            backend.activateGke();
+            backend.activateGke(
+                $("#gke-cluster-text").val(),
+                $("#gke-region-text").val(),
+                $("#gke-project-text").val(),
+                $("#gke-namespace-text").val(),
+                $("#gke-minutes-text").val()
+            );
         });
 
         $(document).ready(async () => {

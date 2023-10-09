@@ -26,7 +26,6 @@ import com.google.solutions.jitaccess.core.AccessDeniedException;
 import com.google.solutions.jitaccess.core.AccessException;
 import com.google.solutions.jitaccess.core.ApplicationVersion;
 import com.google.solutions.jitaccess.core.Exceptions;
-import com.google.solutions.jitaccess.core.adapters.KubernetesAdapter;
 import com.google.solutions.jitaccess.core.adapters.LogAdapter;
 import com.google.solutions.jitaccess.core.data.*;
 import com.google.solutions.jitaccess.core.services.ActivationTokenService;
@@ -273,9 +272,14 @@ public class ApiResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   @Path("gkeActivate")
-  public void gkeActivate() throws IOException, InterruptedException {
-    System.out.println("activate");
-    String result = gkeService.test();
+  public void gkeActivate(@Context SecurityContext securityContext, GkeActivationRequest request) throws IOException, InterruptedException {
+    System.out.println(String.format("cluster=%s", request.cluster));
+    System.out.println(String.format("region=%s", request.region));
+    System.out.println(String.format("project=%s", request.project));
+    System.out.println(String.format("namespace=%s", request.namespace));
+    System.out.println(String.format("minutes=%s", request.minutes));
+    var iapPrincipal = (UserPrincipal) securityContext.getUserPrincipal();
+    String result = gkeService.test(request.cluster, request.region, request.project, request.namespace, iapPrincipal.getId().email, request.minutes);
     System.out.println(result);
 
   }
@@ -853,6 +857,16 @@ public class ApiResource {
       }
     }
   }
+
+  public static class GkeActivationRequest {
+    public String cluster;
+    public String region;
+    public String project;
+    public String namespace;
+    public int minutes;
+
+  }
+
 
   // -------------------------------------------------------------------------
   // Notifications.

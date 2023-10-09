@@ -16,11 +16,8 @@ public class GkeService {
     this.kubernetesAdapter = kubernetesAdapter;
   }
 
-  public String test() throws IOException, InterruptedException {
-    System.out.println("gke service test");
-    String result = kubernetesAdapter.test();
-    System.err.println(String.format("result is %s", result));
-    return result;
+  public String test(String cluster, String region, String project, String namespace, String userEmail, int minutes) throws IOException, InterruptedException {
+    return kubernetesAdapter.test(cluster, region, project, namespace, userEmail, minutes);
   }
 
 }

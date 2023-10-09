@@ -36,14 +36,20 @@ class Model {
         return this._policy;
     }
 
-    async activateGke() {
+    async activateGke(cluster, region, project, namespace, minutes) {
         try {
             return $.ajax({
                 type: "POST",
                 url: `/api/gkeActivate`,
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
-                data: JSON.stringify({}),
+                data: JSON.stringify({
+                    cluster,
+                    region,
+                    project,
+                    namespace,
+                    minutes
+                }),
                 headers: this._getHeaders()
             });
         } catch (error) {
